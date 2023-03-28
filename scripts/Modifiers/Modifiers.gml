@@ -68,13 +68,14 @@ function Modifier(_modifier_id, _mod_sync_type, _name, _sprite, _description, _q
 	description = _description;
 	quality = _quality;
 	mod_sync_type = _mod_sync_type;
+	owner = other;
 	
 	registed_events = [];
 	events = {};
 	
 	static item_owner = noone; //the item this modifier is attached to
 	static owner = noone; // the entity which owns this indevidual modifier
-	static modifier_count = 0;
+	static modifier_count = 1;
 	
 	//eventListeners = {};
 	
@@ -117,7 +118,6 @@ function ModifierHandler() constructor {
 	
 	__add_modifier = function(_mod) {
 		modifiers[$ _mod.modifier_id] = _mod;
-		
 	}
 	
 	__remove_modifier = function(_mod) {
@@ -130,12 +130,15 @@ function ModifierHandler() constructor {
 		delete _deleted_mod;
 	}
 	
-	add_modifier = function(_mod) {
+	add_modifier = function(_mod, _count = undefined) {
+		var _input_count = (is_undefined(_count)) ? 1 : _count;
+		
 		if (has_modifier(_mod)) {
 			var _current_count = get_modifier_count(_mod);
-			set_modifier_count(_mod, _current_count+1);
+			set_modifier_count(_mod, _current_count+_input_count);
 		}
-		else{
+		else {
+			_mod.modifier_count = _input_count;
 			__add_modifier(_mod);
 		}
 		
@@ -329,7 +332,8 @@ function ModifierHandler() constructor {
 	
 	get_modifier_count = function(_mod) {
 		if (has_modifier(_mod)) {
-			return modifiers[$ _key].modifier_count
+			var _orig_mod = get_modifier(_mod)
+			return _orig_mod.modifier_count
 		}
 		else{
 			return 0;
@@ -348,7 +352,9 @@ function ModifierHandler() constructor {
 	
 	set_modifier_count = function(_mod, _count) {
 		if (has_modifier(_mod)) {
-			return modifiers[$ _key].modifier_count
+			var _orig_mod = get_modifier(_mod)
+			_orig_mod.modifier_count = _count;
+			return _orig_mod.modifier_count;
 		}
 		else{
 			return 0;

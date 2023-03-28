@@ -21,12 +21,12 @@ function EntityModMoveTest() : Modifier("EntityModMoveTest", MOD_SYNC_TYPE.ASYNC
 	register_event(ENTITY_STATE_MOVE_NORM, mod_sync_type, {
 		init: function() {
 			timer_count = 120;
-			
+			timer_decrement = modifier_count;
 		},
 		EVENT_TYPE_EV_STEP : {
 			EVENT_NUMBER_EV_STEP_BEGIN : function() {
 			
-			timer_count -= 1;
+			timer_count -= timer_decrement;
 			
 			return timer_count;
 		},
@@ -34,9 +34,10 @@ function EntityModMoveTest() : Modifier("EntityModMoveTest", MOD_SYNC_TYPE.ASYNC
 		EVENT_TYPE_EV_DRAW : {
 			EVENT_NUMBER_EV_DRAW_NORMAL : function() {
 				var _timer_count = timer_count
+				var _timer_decrement = timer_decrement;
 				
 				with (owner) {
-					var _str = string(_timer_count);
+					var _str = string(string(_timer_count)+"\n"+string(_timer_decrement));
 					draw_text(x+8, y+8, _str);
 				}
 				

@@ -6,13 +6,9 @@ input_interacting = false;
 
 modifiers = new ModifierHandler();
 var _mod = new EntityModMoveTest()
-_mod.owner = id;
 modifiers.add_modifier(_mod);
-var _mod = new EntityModMoveTron()
-_mod.owner = id;
-modifiers.add_modifier(_mod);
+
 var _mod = new EntityModMoveAnalogWalk()
-_mod.owner = id;
 modifiers.add_modifier(_mod);
 
 entity_dir = 0;
