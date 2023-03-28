@@ -35,7 +35,11 @@ input_register_id = INPUT.register({
 			var move_right_pressed = INPUT.check(ACTION.MOVE_RIGHT);
 			if (move_down_pressed-move_up_pressed != 0) || (move_right_pressed-move_left_pressed != 0) {
 				//transition the player to movement state
-				csm.activate("movement");
+				var _state = csm.get_state("movement");
+				if (_state.active = false){
+					csm.activate("movement");
+				}
+				_state.should_end = false;
 			}
 			#endregion
 			#region Down
@@ -57,7 +61,7 @@ input_register_id = INPUT.register({
 				var _state = csm.get_state("movement");
 				if (_state.active) {
 					//return to the idle state
-					_state.deactivate();
+					_state.should_end = true;
 				}
 			}
 			#endregion

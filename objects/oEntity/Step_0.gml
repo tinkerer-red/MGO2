@@ -1,1 +1,1 @@
-csm.run("step")
+csm.run("update")

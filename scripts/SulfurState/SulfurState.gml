@@ -9,8 +9,12 @@ function State() constructor {
 	self.state_id = undefined;
 	self.parent_state = undefined;
 	self.__owner = other;
+	self.current_state = undefined;
+	self.current_state_id = undefined;
 	
 	#region Private
+	__state_variables = {};
+	
 	__eventListeners_to_string = function() {
 		var _str = "{"
 		
@@ -49,14 +53,13 @@ function State() constructor {
 		return true
 	}
 	
-	__get_state_index = function(_state_id){
-		static _func = method({state_id: _state_id}, function(_element, _index) {
+	__get_state_index = function(_state_id) {
+		var _func = method({state_id: _state_id}, function(_element, _index) {
 			if (_element.state_id == self.state_id) {
 				return true;
 			}
 			return false;
 		})
-		
 		var _index = array_find_index(self.states, _func);
 		
 		return _index;
@@ -65,6 +68,7 @@ function State() constructor {
 	__get_state = function(_state_id) {
 		var _index = __get_state_index(_state_id);
 		
+		if (_index == -1) return undefined;
 		return self.states[_index];
 	}
 	
@@ -102,6 +106,16 @@ function State() constructor {
 		return variable_struct_exists(self.eventListeners, _event_name);
 	}
 	
+	__set_current_state = function(_state) {
+		current_state_id = _state.state_id;
+		current_state = _state;
+		
+		if (!is_undefined(parent_state))
+		&& (__struct_is_state(parent_state)) {
+			parent_state.__set_current_state(_state);
+		}
+	}
+	
 	toString = function() {
 		var _str = "{"
 		var _names = variable_struct_get_names(self);
@@ -117,7 +131,8 @@ function State() constructor {
 				continue;
 			}
 			
-			if (is_struct(_val))
+			if (!is_undefined(_val))
+			&& (is_struct(_val))
 			&& (__struct_is_state(_val)){
 				_str += _key + ": " + string(_val.state_id) + ","
 				_i+=1;
@@ -142,16 +157,27 @@ function State() constructor {
 	#endregion
 	
 	#region Activations
-	activate = function() {
-		self.active = true;
-		self.run("enter");
-		
+	activate = function(_state = undefined) {
+		if (is_undefined(_state)) {
+			self.active = true;
+			self.run("enter");
+		}
+		else{
+			var _csm_state = get_state(_state);
+			_csm_state.activate()
+		}
 		return self;
 	}
 	
-	deactivate = function() {
-		self.active = false;
-		self.run("leave");
+	deactivate = function(_state = undefined) {
+		if (is_undefined(_state)) {
+			self.active = false;
+			self.run("leave");
+		}
+		else{
+			var _csm_state = get_state(_state);
+			_csm_state.deactivate()
+		}
 		
 		return self;
 	}
@@ -185,13 +211,15 @@ function State() constructor {
 			return;
 		}
 		
+		__set_current_state(self);
+		
 		var _callback = method(__owner, self.eventListeners[$ _event_name])
 		_callback(eventData);
 	}
 	#endregion
 	
 	#region State handlers
-	add_state = function(_name, _struct, _active=true) {
+	add_state = function(_name, _struct, _start_active=true) {
 		if (__struct_is_state(_struct)) {
 			var _state = _struct;
 		}
@@ -203,10 +231,14 @@ function State() constructor {
 		}
 		
 		_state.state_id = _name;
-		_state.parent_state = self.state_id;
+		_state.parent_state = self;
 		_state.__owner = __owner;
 		
 		array_push(self.states, _state);
+		
+		if (_start_active) {
+			activate(_name);
+		}
 		
 		return _state;
 	}
@@ -230,20 +262,38 @@ function State() constructor {
 	run = function(_event_name) {
 		if (!self.active) { return; }
 		
+		fire_event(_event_name);
+		
 		var _size = array_length(self.states)
+		if (_size == 0) { return; }
+		
 		var _state;
 		var _i=0; repeat(_size) {
 			_state = self.states[_i];
-			_state.fire_event(_event_name);
 			_state.run(_event_name);
 		_i+=1;}//end repeat loop
+	}
+	
+	get_current_state = function() {
+		return self.current_state
+	}
+	
+	get_current_state_id = function() {
+		return self.current_state_id
+	}
+	
+	get_state_var = function(_var) {
+		return variable_struct_get(__state_variables, _var)
+		
+	}
+	
+	set_state_var = function(_var, _val) {
+		__state_variables[$ _var] = _val;
+	}
+	
+	state_var_exists = function(_var) {
+		return variable_struct_exists(__state_variables, _var)
 	}
 	#endregion
 	
 }
-
-test = function(){}
-
-log(["test", test])
-log(["script_get_name(08613318)", script_get_name(08613318)])
-log(["SulfurState", SulfurState])

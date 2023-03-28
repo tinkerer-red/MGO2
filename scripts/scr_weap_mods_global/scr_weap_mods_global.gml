@@ -11,7 +11,6 @@ function ItemModWeapContinuous() : ItemModifier() constructor {
 	*/#endregion
 	
 	#region Config
-	static event = ITEM_STATE_WEAPON_COLLIDE
 	#endregion
 	
 	#region Events

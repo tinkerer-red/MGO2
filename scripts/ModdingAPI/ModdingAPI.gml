@@ -205,10 +205,6 @@ function RunHooks(_hook_id) {
 			#macro MC_ENTITY_INIT [] // Called whenever the ENTITY is initialized.
 			#macro MC_POST_ENTITY_INIT [] // Called after the ENTITY is initialized.
 		
-			#macro MC_PRE_ENTITY_INIT_HEALTH [] // Called before the ENTITY's health is initialized.
-			#macro MC_ENTITY_INIT_HEALTH [] // Called whenever the ENTITY's health is initialized.
-			#macro MC_POST_ENTITY_INIT_HEALTH [] // Called after the ENTITY's health is initialized.
-		
 			#macro MC_PRE_ENTITY_ITEM_PICKUP [] // Called before the ENTITY picks up an item.
 			#macro MC_ENTITY_ITEM_PICKUP [] // Called whenever the ENTITY picks up an item.
 			#macro MC_POST_ENTITY_ITEM_PICKUP [] // Called after the ENTITY picks up an item.

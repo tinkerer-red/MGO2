@@ -1,1 +1,1 @@
-csm.run("draw_gui_begin")
+csm.run("update")

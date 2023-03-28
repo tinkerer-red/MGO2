@@ -7,15 +7,12 @@ function func_to_readable_string(_func) {
 	if (string_pos("function ", _orig_str)) {
 		//convert global function names
 		if (string_count("gml", _orig_str) == 1) {
-			log("global function")
 			var _names = variable_struct_get_names(global);
-			log(["_names", _names])
 			var _size = variable_struct_names_count(global);
 			var _key, _val;
 			var _i=0; repeat(_size) {
 				_key = _names[_i];
 				_val = variable_struct_get(global, _key);
-				log(["_val", _val, "_func", _func])
 				if (_val == _func) {
 					var _str = "global."+_key;
 				}

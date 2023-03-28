@@ -1,3 +1,4 @@
+Warp hole (teleports you to a random open possition then 5 seconds later teleports you back to your previous position)
 Poisonous (applies a damage-over-time effect to the target)
 Ricochet (projectiles bounce off surfaces and can hit multiple enemies)
 Homing (projectiles follow the nearest enemy until they hit)

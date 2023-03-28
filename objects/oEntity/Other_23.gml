@@ -4,248 +4,288 @@ csm = new ConcurrentStateMachine();
 csm.add_state("init", {
 	enter: function() {
 		//enter
-		var _return = RunHooks(MC_PRE_ENTITY_INIT);
+		csm.current_state.phase_state = "pre";
 	},
-	step: function() {
-		//step
-		var _return = RunHooks(MC_ENTITY_INIT)
+	update: function() {
+		var _current_state = csm.current_state;
+		var _phase = _current_state.phase_state;
+		var _postpone_state_change = false;
+		
+		if (csm.current_state.phase_state == "pre") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_PRE);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "norm";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "norm") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_NORM);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "post";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "post") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_POST);
+			if (!_postpone_state_change) {
+				_current_state.deactivate();
+				_postpone_state_change = false;
+			}
+		}
 	},
 	leave: function() {
 		//leave
-		var _return = RunHooks(MC_POST_ENTITY_INIT);
 	}
 });
 
 csm.add_state("idle", {
 	enter: function() {
 		//enter
-		var _return = RunHooks(MC_PRE_ENTITY_IDLE_UPDATE);
+		csm.current_state.phase_state = "pre";
 	},
-	step: function() {
-		//step
-		var _return = RunHooks(MC_ENTITY_IDLE_UPDATE)
+	update: function() {
+		var _current_state = csm.current_state;
+		var _phase = _current_state.phase_state;
+		var _postpone_state_change = false;
+		
+		if (csm.current_state.phase_state == "pre") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_PRE);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "norm";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "norm") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_NORM);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "post";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "post") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_POST);
+			if (!_postpone_state_change) {
+				_current_state.deactivate();
+				_postpone_state_change = false;
+			}
+		}
 	},
-	leave: function(){
+	leave: function() {
 		//leave
-		var _return = RunHooks(MC_POST_ENTITY_IDLE_UPDATE)
 	}
 });
 
 csm.add_state("movement", {
 	enter: function() {
 		//enter
-		var _return = RunHooks(MC_PRE_ENTITY_MOVE);
+		csm.current_state.phase_state = "pre";
+		csm.current_state.should_end = false;
 	},
-	step: function() {
-		//step
-		var _return = RunHooks(MC_ENTITY_MOVE)
-	},
-	leave: function(){
-		//leave
-		var _return = RunHooks(MC_POST_ENTITY_MOVE)
-	}
-});
-log(["self", self])
-is_object_instance(self)
-log(["id", id])
-is_object_instance(id)
-
-log(["csm", csm])
-
-/*
-csm.add_state("attack_button", {
-	enter: function() {
-		//find out what button is being pressed
+	update: function() {
+		var _current_state = csm.current_state;
+		var _phase = _current_state.phase_state;
+		var _postpone_state_change = false;
 		
-		//assign the weapon mods
-		weapon_mods = struct_copy()
+		if (csm.current_state.phase_state == "pre") {
+			//log("pre")
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_MOVE_PRE);
+			if (!_postpone_state_change) {
+				//log(["===1===_current_state", _current_state.toString()])
+				csm.current_state.phase_state = "norm";
+				//log(["===2===_current_state", _current_state.toString()])
+				_postpone_state_change = false;
+			}
+		}
 		
-		//trigger the transition
-		csm.trigger("t_"+ITEM_STATE_WEAPON_PRE_BUTTON_PRESSED)
-	},
-});
-csm.add_state_child("attack_button", ITEM_STATE_WEAPON_PRE_BUTTON_PRESSED, {
-	enter: function() {
-		__continue_to_next_step = true;
-		__state_mods = array_copy(weapon_mods[$ get_current_state()]);
-			
-		var _size = array_length(__state_mods)
-			
-		if (_size == 0) {
-			csm.trigger("t_continue")
+		if (csm.current_state.phase_state == "norm") {
+			//log("norm")
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_MOVE_NORM);
+			if (!_postpone_state_change)
+			&& (csm.current_state.should_end) {
+				csm.current_state.phase_state = "post";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "post") {
+			//log("post")
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_MOVE_POST);
+			if (!_postpone_state_change) {
+				if (csm.current_state.should_end) {
+					_current_state.deactivate();
+					_postpone_state_change = false;
+				}
+				else{
+					//if we no longer need to end the state we will be returning to pre walk
+				}
+				
+			}
 		}
 	},
-	
-	begin_step: function() {
-		__continue_to_next_step = true;
-		run_step_modifiers();
-	},
-	step: function() {
-		run_step_modifiers();
-	},
-	end_step: function() {
-		run_step_modifiers();
-	},
-	
-	draw_begin: function() {
-		run_step_modifiers()
-	},
-	draw: function() {
-		run_step_modifiers()
-	},
-	draw_end: function() {
-		run_step_modifiers();
-			
-		if (__continue_to_next_step){
-			csm.trigger("t_"+ITEM_STATE_WEAPON_BUTTON_PRESSED)
-		}
-	},
-	
-	leave: function(){
+	leave: function() {
 		//leave
 	}
 });
-csm.add_state_child("attack_button", ITEM_STATE_WEAPON_BUTTON_PRESSED, {
-	enter: function() {
-		__continue_to_next_step = true;
-		__state_mods = array_copy(weapon_mods[$ get_current_state()]);
-			
-		var _size = array_length(__state_mods)
-			
-		if (_size == 0) {
-			csm.trigger("t_continue")
-		}
-	},
-	
-	begin_step: function() {
-		__continue_to_next_step = true;
-		run_step_modifiers();
-	},
-	step: function() {
-		run_step_modifiers();
-	},
-	end_step: function() {
-		run_step_modifiers();
-	},
-	
-	draw_begin: function() {
-		run_step_modifiers()
-	},
-	draw: function() {
-		run_step_modifiers()
-	},
-	draw_end: function() {
-		run_step_modifiers();
-			
-		if (__continue_to_next_step){
-			csm.trigger("t_"+ITEM_STATE_WEAPON_POST_BUTTON_PRESSED)
-		}
-	},
-	
-	leave: function(){
-		//leave
-	}
-});
-csm.add_state_child("attack_button", ITEM_STATE_WEAPON_POST_BUTTON_PRESSED, {
-	enter: function() {
-		__continue_to_next_step = true;
-		__state_mods = array_copy(weapon_mods[$ get_current_state()]);
-			
-		var _size = array_length(__state_mods)
-			
-		if (_size == 0) {
-			csm.trigger("t_continue")
-		}
-	},
-	
-	begin_step: function() {
-		__continue_to_next_step = true;
-		run_step_modifiers();
-	},
-	step: function() {
-		run_step_modifiers();
-	},
-	end_step: function() {
-		run_step_modifiers();
-	},
-	
-	draw_begin: function() {
-		run_step_modifiers()
-	},
-	draw: function() {
-		run_step_modifiers()
-	},
-	draw_end: function() {
-		run_step_modifiers();
-			
-		if (__continue_to_next_step){
-			csm.trigger("t_attack")
-		}
-	},
-	
-	leave: function(){
-		//leave
-	}
-});
-*/
+
 csm.add_state("attack", {
 	enter: function() {
 		//enter
-		var _return = RunHooks(MC_PRE_ENTITY_ATTACK);
+		csm.current_state.phase_state = "pre";
 	},
-	step: function() {
-		//step
-		var _return = RunHooks(MC_ENTITY_ATTACK)
+	update: function() {
+		var _current_state = csm.current_state;
+		var _phase = _current_state.phase_state;
+		var _postpone_state_change = false;
+		
+		if (csm.current_state.phase_state == "pre") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_ATTACK_PRE);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "norm";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "norm") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_ATTACK_NORM);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "post";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "post") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_ATTACK_POST);
+			if (!_postpone_state_change) {
+				_current_state.deactivate();
+				_postpone_state_change = false;
+			}
+		}
 	},
-	leave: function(){
+	leave: function() {
 		//leave
-		input_attack_id = undefined;
-		var _return = RunHooks(MC_POST_ENTITY_ATTACK);
 	}
 });
 
 csm.add_state("damaged", {
 	enter: function() {
 		//enter
-		var _return = RunHooks(MC_PRE_ENTITY_DAMAGE);
+		csm.current_state.phase_state = "pre";
 	},
-	step: function() {
-		//step
-		var _return = RunHooks(MC_ENTITY_DAMAGE)
+	update: function() {
+		var _current_state = csm.current_state;
+		var _phase = _current_state.phase_state;
+		var _postpone_state_change = false;
+		
+		if (csm.current_state.phase_state == "pre") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_DAMAGED_PRE);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "norm";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "norm") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_DAMAGED_NORM);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "post";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "post") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_DAMAGED_POST);
+			if (!_postpone_state_change) {
+				_current_state.deactivate();
+				_postpone_state_change = false;
+			}
+		}
 	},
-	leave: function(){
+	leave: function() {
 		//leave
-		var _return = RunHooks(MC_POST_ENTITY_DAMAGE)
 	}
 });
 
 csm.add_state("death", {
 	enter: function() {
 		//enter
-		var _return = RunHooks(MC_PRE_ENTITY_DEATH);
+		csm.current_state.phase_state = "pre";
 	},
-	step: function() {
-		//step
-		var _return = RunHooks(MC_ENTITY_DEATH)
+	update: function() {
+		var _current_state = csm.current_state;
+		var _phase = _current_state.phase_state;
+		var _postpone_state_change = false;
+		
+		if (csm.current_state.phase_state == "pre") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_DEATH_PRE);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "norm";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "norm") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_DEATH_NORM);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "post";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "post") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_DEATH_POST);
+			if (!_postpone_state_change) {
+				_current_state.deactivate();
+				_postpone_state_change = false;
+			}
+		}
 	},
-	leave: function(){
+	leave: function() {
 		//leave
-		var _return = RunHooks(MC_POST_ENTITY_DEATH)
 	}
 });
 
 csm.add_state("animation", { //used for anything where the player is locked in a state, like opening chests, ending a dungeon, or teleporting
 	enter: function() {
 		//enter
-		var _return = RunHooks(MC_PRE_ENTITY_ANIMATION);
+		csm.current_state.phase_state = "pre";
 	},
-	step: function() {
-		//step
-		var _return = RunHooks(MC_ENTITY_ANIMATION)
+	update: function() {
+		var _current_state = csm.current_state;
+		var _phase = _current_state.phase_state;
+		var _postpone_state_change = false;
+		
+		if (csm.current_state.phase_state == "pre") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_PRE);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "norm";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "norm") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_NORM);
+			if (!_postpone_state_change) {
+				csm.current_state.phase_state = "post";
+				_postpone_state_change = false;
+			}
+		}
+		
+		if (csm.current_state.phase_state == "post") {
+			_postpone_state_change += modifiers.run_modifiers(ENTITY_STATE_IDLE_POST);
+			if (!_postpone_state_change) {
+				_current_state.deactivate();
+				_postpone_state_change = false;
+			}
+		}
 	},
-	leave: function(){
+	leave: function() {
 		//leave
-		var _return = RunHooks(MC_POST_ENTITY_ANIMATION)
 	}
 });
-
+//state
+//pre/normal/post
+//step event

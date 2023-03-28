@@ -1,1 +1,1 @@
-csm.run("draw_end")
+csm.run("update")
