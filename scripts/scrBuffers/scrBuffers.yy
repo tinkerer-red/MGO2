@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "Script26",
+  "name": "scrBuffers",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Movements",
-    "path": "folders/Modifiers/Movements.yy",
+    "name": "GLM Extended",
+    "path": "folders/_Libraries/GLM Extended.yy",
   },
 }

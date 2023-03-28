@@ -57,7 +57,7 @@
 #endregion
 
 enum MOD_SYNC_TYPE {
-	ACTIVE, // the state transitions will be delayed if this mod returns true
+	SYNC, // the state transitions will be delayed if this mod returns true
 	PASSIVE, // the modifier will run until the state changes, it will always return that its 
 	ASYNC // the modifier will be queued up to run despite the state changing
 }
@@ -96,7 +96,7 @@ function Modifier(_modifier_id, _mod_sync_type, _name, _sprite, _description, _q
 	
 	static remove_mod_from_queue = function() {
 		switch (mod_sync_type) {
-			case MOD_SYNC_TYPE.ACTIVE: {
+			case MOD_SYNC_TYPE.SYNC: {
 				
 			break; }
 			case MOD_SYNC_TYPE.PASSIVE: {
@@ -168,29 +168,28 @@ function ModifierHandler() constructor {
 		var _names = variable_struct_get_names(modifiers);
 		var _size = variable_struct_names_count(modifiers);
 		var _returned = false;
+		var _event_struct, _ev_type, _ev_number, _event_strings;
 		var _key, _mod, _func, _mod_ev_type, _event_struct;
 		var _postpone_state_change = false;
+		
+		
+		if (is_undefined(_step)) {
+			//if step is undefined then run the relevent step event
+			var _event_strings = event_to_string_struct();
+			var _ev_type = _event_strings.ev_type;
+			var _ev_number = _event_strings.ev_number;
+		}
+		else{
+			//otherwise run the specifically defined event such as enter/leave
+			var _ev_type = _step.ev_type;
+			var _ev_number = _step.ev_number;
+		}
 		
 		var _i=0; repeat(_size) {
 			_key = _names[_i];
 			_mod = modifiers[$ _key];
 			
 			if (array_contains(_mod.registed_events, _event)) {
-				//log("array_contains");
-				//log(["_event", _event])
-				
-				if (is_undefined(_step)) {
-					//if step is undefined then run the relevent step event
-					var _event_strings = event_to_string_struct();
-					var _ev_type = _event_strings.ev_type;
-					var _ev_number = _event_strings.ev_number;
-				}
-				else{
-					//otherwise run the specifically defined event such as enter/leave
-					var _ev_type = _step.ev_type;
-					var _ev_number = _step.ev_number;
-				}
-				
 				//get the event which is being triggered
 				if (variable_struct_exists(_mod.events, _event)) {
 					_event_struct = _mod.events[$ _event];
@@ -202,13 +201,8 @@ function ModifierHandler() constructor {
 						//get the sub step
 						if (variable_struct_exists(_mod_ev_type, _ev_number)) {
 							
-							log(["_mod.mod_type", _mod.mod_type]);
-							log(["MOD_SYNC_TYPE.ACTIVE", MOD_SYNC_TYPE.ACTIVE]);
-							log(["MOD_SYNC_TYPE.PASSIVE", MOD_SYNC_TYPE.PASSIVE]);
-							log(["MOD_SYNC_TYPE.ASYNC", MOD_SYNC_TYPE.ASYNC]);
-							
-							switch (_mod.mod_type) {
-								case MOD_SYNC_TYPE.ACTIVE: {
+							switch (_mod.mod_sync_type) {
+								case MOD_SYNC_TYPE.SYNC: {
 									_func = method(_mod, _mod_ev_type[$ _ev_number]);
 									_postpone_state_change = _func();
 								break;}
@@ -220,6 +214,7 @@ function ModifierHandler() constructor {
 									//add the modifier to the async
 								break;}
 							}
+							
 						}
 					}
 				}
@@ -228,6 +223,7 @@ function ModifierHandler() constructor {
 			_returned += _postpone_state_change;
 			
 		_i+=1;}//end repeat loop
+		
 		
 		return _returned;
 	}

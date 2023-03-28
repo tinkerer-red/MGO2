@@ -5,7 +5,7 @@ input_attack_id = undefined;
 input_interacting = false;
 
 modifiers = new ModifierHandler();
-var _mod = new EntityModMoveAnalogWalk()
+var _mod = new EntityModMoveTron()
 _mod.owner = id;
 modifiers.add_modifier(_mod);
 
@@ -14,7 +14,7 @@ entity_speed = 0;
 
 EVENT_ACTIVATE
 EVENT_IMPORT
-EVENT_FSM
 EVENT_CONSTRUCTOR
+EVENT_FSM
 EVENT_METHOD
 

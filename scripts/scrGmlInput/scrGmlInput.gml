@@ -1606,7 +1606,7 @@ function input_mouse_check_area_gui(x1,y1,x2,y2) {
 }
 	
 function input_device_get_type_name(device) {
-	log(gamepad_get_description(device));
+	show_debug_message(gamepad_get_description(device));
 }
 	
 function input_device_get_type(device) {

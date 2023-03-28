@@ -11,6 +11,7 @@ function State() constructor {
 	self.__owner = other;
 	self.current_state = undefined;
 	self.current_state_id = undefined;
+	self.desired_sub_state = undefined;
 	
 	#region Private
 	__state_variables = {};
@@ -160,7 +161,6 @@ function State() constructor {
 	activate = function(_state = undefined) {
 		if (is_undefined(_state)) {
 			self.active = true;
-			self.run("enter");
 		}
 		else{
 			var _csm_state = get_state(_state);
@@ -172,7 +172,6 @@ function State() constructor {
 	deactivate = function(_state = undefined) {
 		if (is_undefined(_state)) {
 			self.active = false;
-			self.run("leave");
 		}
 		else{
 			var _csm_state = get_state(_state);
@@ -180,6 +179,62 @@ function State() constructor {
 		}
 		
 		return self;
+	}
+	
+	next_sub_state = function(_state = undefined) {
+		if (is_undefined(_state)) {
+			self.next_substate_queued = true;
+			self.fsm.trigger("t_queue_next")
+		}
+		else{
+			var _csm_state = get_state(_state);
+			_csm_state.next_sub_state()
+		}
+		
+		return self;
+	}
+	
+	move_to_sub_state = function(_sub_state, _callback) {
+		#region jsDoc
+		/*
+		@func		move_to_sub_state()
+		@desc		queue up what the next desired state will be.
+		@param {type}	sub_state : The state id you would like to end up all
+		@returns {type}	callback : The function to call when the state has reached the desired substate.
+		
+		add @ before if you want these flags to be true
+		ignore
+		deprecated
+		*/#endregion
+		
+		if (fsm.state_exists(_sub_state)) {
+			self.desired_sub_state = _sub_state;
+			
+			if (fsm.get_current_state() != _sub_state) {
+				self.next_substate_queued = true;
+				self.next_substate_queued_callback = _callback;
+			}
+			else {
+				if (!is_undefined(_callback)) {
+					_callback();
+				}
+				
+			}
+		}
+		else{
+			show_error("argument 1, must be a valid sub state", true)
+		}
+	}
+	
+	get_sub_state = function(_state = undefined) {
+		if (is_undefined(_state)) {
+			return self.fsm.get_current_state();
+		}
+		else{
+			var _csm_state = get_state(_state);
+			return _csm_state.get_sub_state()
+		}
+		
 	}
 	#endregion
 	
@@ -213,7 +268,7 @@ function State() constructor {
 		
 		__set_current_state(self);
 		
-		var _callback = method(__owner, self.eventListeners[$ _event_name])
+		var _callback = self.eventListeners[$ _event_name]
 		_callback(eventData);
 	}
 	#endregion
@@ -238,6 +293,9 @@ function State() constructor {
 		
 		if (_start_active) {
 			activate(_name);
+		}
+		else{
+			deactivate(_name);
 		}
 		
 		return _state;

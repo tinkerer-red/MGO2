@@ -14,22 +14,20 @@ function EntityModMoveAnalogWalk() : Modifier("EntityModMoveAnalogWalk", MOD_SYN
 	#endregion
 	
 	#region Config
-	mod_type = MOD_SYNC_TYPE.PASSIVE;
+	
 	#endregion
 	
 	#region Events
-	register_event(ENTITY_STATE_MOVE_NORM, mod_type, {
+	register_event(ENTITY_STATE_MOVE_NORM, mod_sync_type, {
 		init: function() {
 			//Define Variables
 			move_max_speed = 1 + modifier_count; //max of 6
 			move_vector = {x:0,y:0};
-			log("init running")
 		},
 		EVENT_TYPE_EV_STEP : {
 			EVENT_NUMBER_EV_STEP_BEGIN : function() {
 			
 			//step
-			log(["self", self])
 			move_vector.x = move_vector.x + owner.input_vector.x;
 			move_vector.y = move_vector.y + owner.input_vector.y;
 			
@@ -54,7 +52,6 @@ function EntityModMoveAnalogWalk() : Modifier("EntityModMoveAnalogWalk", MOD_SYN
 		},
 		EVENT_TYPE_EV_DRAW : {
 			EVENT_NUMBER_EV_DRAW_NORMAL : function() {
-				log("IT WORKS")
 				with (owner) {
 					draw_circle(x,y,8,false);
 					var _str = string(csm.__get_active_states());
@@ -64,7 +61,6 @@ function EntityModMoveAnalogWalk() : Modifier("EntityModMoveAnalogWalk", MOD_SYN
 		},
 		clean_up: function() {
 			//leave
-			log("cleaning up modifier")
 		}
 	});
 	#endregion
@@ -86,11 +82,3 @@ function EntityModMoveAnalogWalk() : Modifier("EntityModMoveAnalogWalk", MOD_SYN
 		return _item[$ ITEM_FLAGS_IS_WEAPON]
 	}
 }
-
-//if state active
-	//run state's state machine
-		
-//event type
-	//event number
-
-

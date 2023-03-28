@@ -156,7 +156,7 @@ function SnowState(_initState, _execEnter = true) constructor {
 					++_i;
 				}
 			}
-			exec(event, undefined, _args);
+			return exec(event, undefined, _args);
 		});
 		
 		return self;
@@ -327,9 +327,10 @@ function SnowState(_initState, _execEnter = true) constructor {
 		__currEvent = _event;
 		var _func = __states[$ _state][$ _event].func;
 		var _pyramid = __func_exec;
-		with (__owner) _pyramid(_func, _args);
-			
-		return self;
+		var _return = undefined;
+		with (__owner) _return = _pyramid(_func, _args);
+		
+		return _return;
 	};
 	
 	/// @param {function} function

@@ -29,17 +29,16 @@ input_register_id = INPUT.register({
 			
 			#region Movement
 			#region Pressed
-			var move_up_pressed    = INPUT.check(ACTION.MOVE_UP);
-			var move_down_pressed  = INPUT.check(ACTION.MOVE_DOWN);
-			var move_left_pressed  = INPUT.check(ACTION.MOVE_LEFT);
-			var move_right_pressed = INPUT.check(ACTION.MOVE_RIGHT);
+			var move_up_pressed    = INPUT.pressed(ACTION.MOVE_UP);
+			var move_down_pressed  = INPUT.pressed(ACTION.MOVE_DOWN);
+			var move_left_pressed  = INPUT.pressed(ACTION.MOVE_LEFT);
+			var move_right_pressed = INPUT.pressed(ACTION.MOVE_RIGHT);
 			if (move_down_pressed-move_up_pressed != 0) || (move_right_pressed-move_left_pressed != 0) {
 				//transition the player to movement state
-				var _state = csm.get_state("movement");
-				if (_state.active = false){
-					csm.activate("movement");
+				var _state = csm.get_state("move");
+				if (_state.fsm.get_current_state() == "deactive") {
+					_state.move_to_sub_state("norm")
 				}
-				_state.should_end = false;
 			}
 			#endregion
 			#region Down
@@ -58,11 +57,8 @@ input_register_id = INPUT.register({
 				input_vector = {x:0,y:0};
 				
 				//handle state
-				var _state = csm.get_state("movement");
-				if (_state.active) {
-					//return to the idle state
-					_state.should_end = true;
-				}
+				var _state = csm.get_state("move");
+				_state.move_to_sub_state("deactive");
 			}
 			#endregion
 			#endregion
