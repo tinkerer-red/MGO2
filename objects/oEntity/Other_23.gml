@@ -15,3 +15,8 @@ csm.add_state("death", new state_machine());
 
 csm.add_state("animation", new state_machine());
 
+
+
+
+
+csm.add_state("async_mods", new async_controller());

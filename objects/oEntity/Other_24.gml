@@ -79,3 +79,9 @@ state_machine = function() : State() constructor {
 		return postponed_transition_this_frame;
 	});
 }
+
+async_controller = function() : State() constructor {
+	self.add_event("update", function() {
+		__owner.modifiers.run_async_modifiers();
+	});
+}

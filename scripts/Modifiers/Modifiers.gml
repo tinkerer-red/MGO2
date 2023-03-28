@@ -91,6 +91,7 @@ function Modifier(_modifier_id, _mod_sync_type, _name, _sprite, _description, _q
 	
 	static register_event = function(_event, _mod_sync_type, _event_struct) {
 		array_push(registed_events, _event);
+		_event_struct.sync_type = _mod_sync_type;
 		events[$ _event] = _event_struct;
 	}
 	
@@ -168,10 +169,72 @@ function ModifierHandler() constructor {
 		var _names = variable_struct_get_names(modifiers);
 		var _size = variable_struct_names_count(modifiers);
 		var _returned = false;
-		var _event_struct, _ev_type, _ev_number, _event_strings;
-		var _key, _mod, _func, _mod_ev_type, _event_struct;
+		var _event_struct, 
+		var _key, _mod;
 		var _postpone_state_change = false;
 		
+		var _i=0; repeat(_size) {
+			_key = _names[_i];
+			_mod = modifiers[$ _key];
+			
+			if (array_contains(_mod.registed_events, _event)) {
+				//get the event which is being triggered
+				if (variable_struct_exists(_mod.events, _event)) {
+					_event_struct = _mod.events[$ _event];
+					
+					if (_event_struct.sync_type == MOD_SYNC_TYPE.ASYNC) {
+						queue_async_mod(_mod);
+						_i+=1;
+						continue;
+					}
+					
+					_postpone_state_change = run_modifiers_steps(_mod, _event_struct, _step);
+				}
+			}
+			
+			_returned += _postpone_state_change;
+			
+		_i+=1;}//end repeat loop
+		
+		return _returned;
+	}
+	
+	run_async_modifiers = function() {
+		var _names = variable_struct_get_names(async_mod_queue);
+		var _size = variable_struct_names_count(async_mod_queue);
+		var _event_struct, 
+		var _key, _mod, _event_key, _event_struct;
+		var _postpone_deletion = undefined;
+		var _j;
+		
+		
+		var _i=0; repeat(_size) {
+			_key = _names[_i];
+			_mod = async_mod_queue[$ _key];
+			
+			var _event_names = variable_struct_get_names(_mod.events);
+			var _event_size = variable_struct_names_count(_mod.events);
+			
+			_j=0; repeat(_event_size) {
+				_event_key = _event_names[_j];
+				_event_struct = _mod.events[$ _event_key];
+				
+				if (_event_struct.sync_type == MOD_SYNC_TYPE.ASYNC) {
+					_postpone_deletion = run_modifiers_steps(_mod, _event_struct);
+					
+					if (!_postpone_deletion) {
+						var _func = method(_mod, _event_struct.clean_up);
+						_func();
+						variable_struct_remove(async_mod_queue, _key);
+					}
+				}
+			_j+=1; }; //end inner repeat
+		_i+=1;}//end repeat loop
+		
+		
+	}
+	
+	run_modifiers_steps = function(_mod, _event_struct, _step = undefined) {
 		
 		if (is_undefined(_step)) {
 			//if step is undefined then run the relevent step event
@@ -185,47 +248,45 @@ function ModifierHandler() constructor {
 			var _ev_number = _step.ev_number;
 		}
 		
-		var _i=0; repeat(_size) {
-			_key = _names[_i];
-			_mod = modifiers[$ _key];
-			
-			if (array_contains(_mod.registed_events, _event)) {
-				//get the event which is being triggered
-				if (variable_struct_exists(_mod.events, _event)) {
-					_event_struct = _mod.events[$ _event];
-					
-					//get the parent step
-					if (variable_struct_exists(_event_struct, _ev_type)) {
-						_mod_ev_type = _event_struct[$ _ev_type];
+		
+		//get the parent step
+		if (variable_struct_exists(_event_struct, _ev_type)) {
+			var _mod_ev_type = _event_struct[$ _ev_type];
 						
-						//get the sub step
-						if (variable_struct_exists(_mod_ev_type, _ev_number)) {
+			//get the sub step
+			if (variable_struct_exists(_mod_ev_type, _ev_number)) {
 							
-							switch (_mod.mod_sync_type) {
-								case MOD_SYNC_TYPE.SYNC: {
-									_func = method(_mod, _mod_ev_type[$ _ev_number]);
-									_postpone_state_change = _func();
-								break;}
-								case MOD_SYNC_TYPE.PASSIVE: {
-									_func = method(_mod, _mod_ev_type[$ _ev_number]);
-									_func();
-								break;}
-								case MOD_SYNC_TYPE.ASYNC: {
-									//add the modifier to the async
-								break;}
-							}
-							
-						}
-					}
+				switch (_event_struct.sync_type) {
+					case MOD_SYNC_TYPE.SYNC: {
+						var _func = method(_mod, _mod_ev_type[$ _ev_number]);
+						return _func();
+					break;}
+					case MOD_SYNC_TYPE.PASSIVE: {
+						var _func = method(_mod, _mod_ev_type[$ _ev_number]);
+						_func();
+						return false;
+					break;}
+					case MOD_SYNC_TYPE.ASYNC: {
+						var _func = method(_mod, _mod_ev_type[$ _ev_number]);
+						return _func();
+					break;}
 				}
+							
 			}
-			
-			_returned += _postpone_state_change;
-			
-		_i+=1;}//end repeat loop
+		}
 		
-		
-		return _returned;
+		//default returns if the modifier doesnt have the current step event
+		switch (_event_struct.sync_type) {
+			case MOD_SYNC_TYPE.SYNC: {
+				return true;
+			break;}
+			case MOD_SYNC_TYPE.PASSIVE: {
+				return false;
+			break;}
+			case MOD_SYNC_TYPE.ASYNC: {
+				return true;
+			break;}
+		}
 	}
 	
 	init_modifier = function(_mod) {
@@ -300,6 +361,26 @@ function ModifierHandler() constructor {
 		var _mod = new _func();
 		
 		return _mod
+	}
+	
+	queue_async_mod = function(_mod) {
+		if (!variable_struct_exists(async_mod_queue, _mod.modifier_id)) {
+			async_mod_queue[$ _mod.modifier_id] = _mod;
+			
+			var _names = variable_struct_get_names(_mod.events);
+			var _size = variable_struct_names_count(_mod.events);
+			var _event_key, _event_struct;
+			
+			var _i=0; repeat(_size) {
+				_event_key = _names[_i];
+				_event_struct = _mod.events[$ _event_key];
+				if (_event_struct.sync_type == MOD_SYNC_TYPE.ASYNC) {
+					
+					var _func = method(_mod, _event_struct.init);
+					_func();
+				}
+			_i+=1;}//end repeat loop
+		}
 	}
 }
 

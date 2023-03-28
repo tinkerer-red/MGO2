@@ -39,6 +39,7 @@
   "resources": [
     {"id":{"name":"__snowstate_config","path":"scripts/__snowstate_config/__snowstate_config.yy",},},
     {"id":{"name":"oPlayer","path":"objects/oPlayer/oPlayer.yy",},},
+    {"id":{"name":"EntityModMoveTest","path":"scripts/EntityModMoveTest/EntityModMoveTest.yy",},},
     {"id":{"name":"scrDisplay","path":"scripts/scrDisplay/scrDisplay.yy",},},
     {"id":{"name":"scrInit","path":"scripts/scrInit/scrInit.yy",},},
     {"id":{"name":"scrGmlInput","path":"scripts/scrGmlInput/scrGmlInput.yy",},},

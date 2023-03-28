@@ -22,3 +22,17 @@ function struct_merge(_dest, _source, _overwrite = true){
 		}
 	}
 }
+
+function struct_for_each(_struct, _callback) {
+	if (is_struct(_struct)) { show_error("struct_for_each :: argument 0 is not a struct", true) };
+	
+	var _names = variable_struct_get_names(_struct);
+	var _size = variable_struct_names_count(_struct);
+	var _key, _val;
+	
+	var _i=0; repeat(_size) {
+		_key = _names[_i];
+		_val = _struct[$ _key];
+		_callback(_val);
+	_i+=1;}//end repeat loop
+}

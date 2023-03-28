@@ -16,6 +16,7 @@
   ],
   "ResourceOrderSettings": [
     {"name":"oPlayer","order":1,"path":"objects/oPlayer/oPlayer.yy",},
+    {"name":"EntityModMoveTest","order":2,"path":"scripts/EntityModMoveTest/EntityModMoveTest.yy",},
     {"name":"scrDisplay","order":3,"path":"scripts/scrDisplay/scrDisplay.yy",},
     {"name":"scrInit","order":2,"path":"scripts/scrInit/scrInit.yy",},
     {"name":"scrGmlInput","order":3,"path":"scripts/scrGmlInput/scrGmlInput.yy",},
