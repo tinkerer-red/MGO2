@@ -5,11 +5,9 @@ input_attack_id = undefined;
 input_interacting = false;
 
 modifiers = new ModifierHandler();
-var _mod = new EntityModMoveTest()
-modifiers.add_modifier(_mod);
 
-var _mod = new EntityModMoveAnalogWalk()
-modifiers.add_modifier(_mod);
+modifiers.add_modifier(new EntityModMoveGolfWalk());
+
 
 entity_dir = 0;
 entity_speed = 0;

@@ -42,6 +42,7 @@
     {"name":"EntityModMoveTron","order":1,"path":"scripts/EntityModMoveTron/EntityModMoveTron.yy",},
     {"name":"scrMaths","order":6,"path":"scripts/scrMaths/scrMaths.yy",},
     {"name":"scrEvents","order":12,"path":"scripts/scrEvents/scrEvents.yy",},
+    {"name":"EntityModMoveGolfWalk","order":3,"path":"scripts/EntityModMoveGolfWalk/EntityModMoveGolfWalk.yy",},
     {"name":"scrDataStructures","order":2,"path":"scripts/scrDataStructures/scrDataStructures.yy",},
     {"name":"scrAsync","order":1,"path":"scripts/scrAsync/scrAsync.yy",},
     {"name":"oPlayerInput","order":2,"path":"objects/oPlayerInput/oPlayerInput.yy",},

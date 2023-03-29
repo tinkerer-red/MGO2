@@ -72,6 +72,7 @@
     {"id":{"name":"scrMaths","path":"scripts/scrMaths/scrMaths.yy",},},
     {"id":{"name":"scr_weap_mods_global","path":"scripts/scr_weap_mods_global/scr_weap_mods_global.yy",},},
     {"id":{"name":"scrEvents","path":"scripts/scrEvents/scrEvents.yy",},},
+    {"id":{"name":"EntityModMoveGolfWalk","path":"scripts/EntityModMoveGolfWalk/EntityModMoveGolfWalk.yy",},},
     {"id":{"name":"scrDataStructures","path":"scripts/scrDataStructures/scrDataStructures.yy",},},
     {"id":{"name":"scrAsync","path":"scripts/scrAsync/scrAsync.yy",},},
     {"id":{"name":"oPlayerInput","path":"objects/oPlayerInput/oPlayerInput.yy",},},
