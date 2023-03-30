@@ -52,6 +52,7 @@
     {"id":{"name":"Script1","path":"scripts/Script1/Script1.yy",},},
     {"id":{"name":"scrInitGlobals","path":"scripts/scrInitGlobals/scrInitGlobals.yy",},},
     {"id":{"name":"KeybindMacros","path":"scripts/KeybindMacros/KeybindMacros.yy",},},
+    {"id":{"name":"spr_test_grid","path":"sprites/spr_test_grid/spr_test_grid.yy",},},
     {"id":{"name":"scrStructs","path":"scripts/scrStructs/scrStructs.yy",},},
     {"id":{"name":"oInputManager","path":"objects/oInputManager/oInputManager.yy",},},
     {"id":{"name":"scrStrings","path":"scripts/scrStrings/scrStrings.yy",},},

@@ -27,6 +27,7 @@
     {"name":"scrMisc","order":7,"path":"scripts/scrMisc/scrMisc.yy",},
     {"name":"Script1","order":11,"path":"scripts/Script1/Script1.yy",},
     {"name":"scrInitGlobals","order":3,"path":"scripts/scrInitGlobals/scrInitGlobals.yy",},
+    {"name":"spr_test_grid","order":20,"path":"sprites/spr_test_grid/spr_test_grid.yy",},
     {"name":"scrStructs","order":9,"path":"scripts/scrStructs/scrStructs.yy",},
     {"name":"oInputManager","order":1,"path":"objects/oInputManager/oInputManager.yy",},
     {"name":"scrStrings","order":8,"path":"scripts/scrStrings/scrStrings.yy",},

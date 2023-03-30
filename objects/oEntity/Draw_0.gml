@@ -11,3 +11,7 @@ var _test = {
 
 var _str = json_beautify(_test)
 draw_text(x+32,y+32,_str)
+
+draw_circle(x,y,8,false);
+var _str = string(csm.__get_active_states());
+draw_text(x+8, y+8, _str);

@@ -16,7 +16,7 @@ function EntityModMoveGolfWalk() : Modifier("EntityModMoveGolfWalk", MOD_SYNC_TY
 	#region Config
 	//this region is used for things which will only ever be calculated once, usually good to make everything here a static variable
 	putt_power_time = GAME_FPS;
-	move_putt_max_distance = 64*modifier_count;
+	move_putt_max_distance = 256*modifier_count;
 	move_putt_friction = 0.1
 	
 	enum MOVE_GOLF_STATE {
@@ -42,6 +42,7 @@ function EntityModMoveGolfWalk() : Modifier("EntityModMoveGolfWalk", MOD_SYNC_TY
 			
 			
 			move_vector = {x:owner.input_vector.x,y:owner.input_vector.y};
+			log(["move_vector", move_vector])
 			
 			timer_incrementer = 2/putt_power_time;
 			timer_direction = 1;
@@ -53,8 +54,16 @@ function EntityModMoveGolfWalk() : Modifier("EntityModMoveGolfWalk", MOD_SYNC_TY
 			EVENT_NUMBER_EV_STEP_NORMAL : function() {
 				//step
 				if (move_putt_state = MOVE_GOLF_STATE.PUTTING) {
-					move_vector.x = move_vector.x + owner.input_vector.x * 0.2;
-					move_vector.y = move_vector.y + owner.input_vector.y * 0.2;
+					//move_vector.x = move_vector.x + owner.input_vector.x * 0.2;
+					//move_vector.y = move_vector.y + owner.input_vector.y * 0.2;
+					
+					if (abs(owner.input_vector.x) || abs(owner.input_vector.y)){
+						var _input_dir = point_direction(0,0,owner.input_vector.x,owner.input_vector.y);
+						var _aim_dir = point_direction(0,0,move_vector.x,move_vector.y);
+						_aim_dir = approach_angle(_aim_dir, _input_dir, 2);
+						move_vector.x = lengthdir_x(1, _aim_dir);
+						move_vector.y = lengthdir_y(1, _aim_dir);
+					}
 					
 					//increment timer
 					timer += timer_incrementer*timer_direction; //cycles from 0-1
@@ -107,26 +116,32 @@ function EntityModMoveGolfWalk() : Modifier("EntityModMoveGolfWalk", MOD_SYNC_TY
 			EVENT_NUMBER_EV_DRAW_NORMAL : function() {
 				var _timer = timer;
 				
+				var _dir = point_direction(0,0,move_vector.x,move_vector.y);
+				var _x = lengthdir_x(100, _dir);
+				var _y = lengthdir_y(100, _dir);
+				
 				with (owner) {
-            //draw an arrow which represents the 0-1 value from the step event above
-            var arrow_length = 64;
-            var arrow_thickness = 32;
-            var arrow_x = x - arrow_length / 2;
-            var arrow_y = y + 32;
-            
-            //draw the arrow outline
-            draw_triangle_color(arrow_x, arrow_y,
-																arrow_x + arrow_length * _timer, arrow_y - arrow_thickness / 2,
-																arrow_x + arrow_length * _timer, arrow_y + arrow_thickness / 2,
-																c_white, c_white, c_white, false);
-            
-            //fill the arrow based on the timer value
-            var arrow_fill_color = make_color_hsv(_timer * 120, 1, 1); //color changes from green to red as the arrow fills up
-            draw_triangle_color(arrow_x, arrow_y,
-																arrow_x + arrow_length * _timer, arrow_y - arrow_thickness / 2,
-																arrow_x + arrow_length * _timer, arrow_y + arrow_thickness / 2,
-																arrow_fill_color, arrow_fill_color, arrow_fill_color, true);
-        }
+					draw_line(x,y,x+_x, y+_y)
+					
+					//draw an arrow which represents the 0-1 value from the step event above
+					var arrow_length = 64;
+					var arrow_thickness = 32;
+					var arrow_x = x - arrow_length / 2;
+					var arrow_y = y + 32;
+					
+					//draw the arrow outline
+					draw_triangle_color(arrow_x, arrow_y,
+															arrow_x + arrow_length * _timer, arrow_y - arrow_thickness / 2,
+															arrow_x + arrow_length * _timer, arrow_y + arrow_thickness / 2,
+															c_white, c_white, c_white, false);
+						
+					//fill the arrow based on the timer value
+					var arrow_fill_color = make_color_hsv(_timer * 120, 1, 1); //color changes from green to red as the arrow fills up
+					draw_triangle_color(arrow_x, arrow_y,
+															arrow_x + arrow_length * _timer, arrow_y - arrow_thickness / 2,
+															arrow_x + arrow_length * _timer, arrow_y + arrow_thickness / 2,
+															arrow_fill_color, arrow_fill_color, arrow_fill_color, true);
+				}
 				
 			}
 		},
