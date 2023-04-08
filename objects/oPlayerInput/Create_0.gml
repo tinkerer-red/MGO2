@@ -29,11 +29,11 @@ input_register_id = INPUT.register({
 			
 			#region Movement
 			#region Pressed
-			var move_up_pressed    = INPUT.pressed(ACTION.MOVE_UP);
-			var move_down_pressed  = INPUT.pressed(ACTION.MOVE_DOWN);
-			var move_left_pressed  = INPUT.pressed(ACTION.MOVE_LEFT);
-			var move_right_pressed = INPUT.pressed(ACTION.MOVE_RIGHT);
-			if (move_down_pressed-move_up_pressed != 0) || (move_right_pressed-move_left_pressed != 0) {
+			var move_up = INPUT.check(ACTION.MOVE_UP);
+			var move_down = INPUT.check(ACTION.MOVE_DOWN);
+			var move_left = INPUT.check(ACTION.MOVE_LEFT);
+			var move_right = INPUT.check(ACTION.MOVE_RIGHT);
+			if (move_down-move_up != 0) || (move_right-move_left != 0) {
 				//transition the player to movement state
 				var _state = csm.get_state("move");
 				if (_state.fsm.get_current_state() == "deactive") {
@@ -42,10 +42,6 @@ input_register_id = INPUT.register({
 			}
 			#endregion
 			#region Down
-			var move_up = INPUT.check(ACTION.MOVE_UP);
-			var move_down = INPUT.check(ACTION.MOVE_DOWN);
-			var move_left = INPUT.check(ACTION.MOVE_LEFT);
-			var move_right = INPUT.check(ACTION.MOVE_RIGHT);
 			if (move_down-move_up != 0) || (move_right-move_left != 0) {
 				input_vector = normalize_vector_to_analog(move_right-move_left, move_down-move_up)
 			}

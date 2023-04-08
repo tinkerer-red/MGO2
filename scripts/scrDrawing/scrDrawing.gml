@@ -165,24 +165,19 @@ function sprite_get_animation_time(_spr) {
 }
 
 function scale_canvas(base_width,base_height,current_width,current_heigh,center) {
-	var _bw = argument0;
-	var _bh = argument1;
-	var _cw = argument2;
-	var _ch = argument3;
-	var _center = argument4;
-	var _aspect = (_bw / _bh);
+	var _aspect = (base_width / base_height);
 
-	if ((_cw / _aspect) > _ch) {
-	    window_set_size((_ch *_aspect), _ch);
+	if ((current_width / _aspect) > current_heigh) {
+	    window_set_size((current_heigh *_aspect), current_heigh);
 	} else {
-	    window_set_size(_cw, (_cw / _aspect));
+	    window_set_size(current_width, (current_width / _aspect));
 	}
 	
-	if (_center) {
+	if (center) {
 	    window_center();
 	}
 
-	surface_resize(application_surface,min(window_get_width(),_bw),min(window_get_height(),_bh));
+	surface_resize(application_surface,min(window_get_width(),base_width),min(window_get_height(),base_height));
 }
 
 function draw_set_text(font,halign,valign,color) {

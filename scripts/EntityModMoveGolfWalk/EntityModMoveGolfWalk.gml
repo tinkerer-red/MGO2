@@ -80,13 +80,13 @@ function EntityModMoveGolfWalk() : Modifier("EntityModMoveGolfWalk", MOD_SYNC_TY
 					//check for button press
 					if (INPUT.pressed(ACTION.INTERACT)) {
 							move_putt_state = MOVE_GOLF_STATE.ROLLING;
+							var _speed = (timer * move_putt_momentum * 0.95) + (move_putt_momentum * 0.05);
 							var _dir = point_direction(0,0,move_vector.x,move_vector.y)
 							
-							var _x = lengthdir_x(move_putt_momentum, _dir);
-							var _y = lengthdir_y(move_putt_momentum, _dir);
+							var _x = lengthdir_x(_speed, _dir);
+							var _y = lengthdir_y(_speed, _dir);
 							
 							momentum_vector = {x: _x,y: _y};
-							
 					}
 				}
 				

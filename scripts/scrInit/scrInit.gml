@@ -13,6 +13,7 @@ function scrInit() {
 	//init_recipe_library();
 	
 	randomize();
+	math_set_epsilon(0.001);
 	
 	// Config-specific overrides
 	global.os_config = os_get_config()

@@ -99,7 +99,7 @@ function rect_to_rect_twiddle(sw, sh, dw, dh, twiddle_pref=0) {
 				var _height_floor_diff = (_height_floor_val- sh  ) / _height_floor_scaler ;
 				var _height_ceil_diff  = (sh   - _height_ceil_val) / _height_ceil_scaler  ;
 		
-				//addaption multiplier (to make sure you cant just stretch one direction of the screen as far as you want)
+				//addaption multiplier (to make sure you cant just stretch one _direction of the screen as far as you want)
 				var _width_addaption  = dw/dh;
 				var _height_addaption = dh/dw;
 		
@@ -159,11 +159,11 @@ function rect_to_rect_twiddle(sw, sh, dw, dh, twiddle_pref=0) {
 		return _return;
 }
 
-function math_lerp_smooth(current,target,speed) {
+function math_lerp_smooth(current,target,_speed) {
 	if ( abs(target - current) < 0.0005 ) {
 	   return target;
 	} else {
-	   return current + (sign(target - current) * abs(target - current) * speed);
+	   return current + (sign(target - current) * abs(target - current) * _speed);
 	}
 }
 
@@ -171,39 +171,39 @@ function math_point_distance_to_percentage(x1,y1,x2,y2,max_dist) {
 	return 1 - (point_distance(x1,y1,x2,y2) / max_dist);
 }
 
-function math_direction_to_axis_x(direction,directional_padding) {
+function math_direction_to_axis_x(_direction,__directional_padding) {
 	/*
 		Directional padding is used to prevent
 		extreme precision of axis input.
-		For exact input set directional_padding to 0
+		For exact input set _directional_padding to 0
 	*/
 	
-	if ( direction < 90 - directional_padding || direction > 270 + directional_padding ) {
-		return 1 - angle_difference(direction,0) / 90;
-	} else if ( direction > 90 + directional_padding || direction < 270 - directional_padding ) {
-		return (angle_difference(direction,180) / 90) - 1;
+	if ( _direction < 90 - _directional_padding || _direction > 270 + _directional_padding ) {
+		return 1 - angle_difference(_direction,0) / 90;
+	} else if ( _direction > 90 + _directional_padding || _direction < 270 - _directional_padding ) {
+		return (angle_difference(_direction,180) / 90) - 1;
 	}
 	
 	return 0;
 }
 
-function math_direction_to_axis_y(direction,directional_padding) {
+function math_direction_to_axis_y(_direction,_directional_padding) {
 	/*
 		Directional padding is used to prevent
 		extreme precision of axis input.
-		For exact input set directional_padding to 0
+		For exact input set _directional_padding to 0
 	*/
 	
-	if ( direction < 180 + directional_padding && direction > 0 + directional_padding ) {
-		return (angle_difference(direction,90) / 90) - 1;
-	} else if ( direction > 180 + directional_padding && direction < 360 - directional_padding ) {
-		return 1 - (angle_difference(direction,270) / 90);
+	if ( _direction < 180 + _directional_padding && _direction > 0 + _directional_padding ) {
+		return (angle_difference(_direction,90) / 90) - 1;
+	} else if ( _direction > 180 + _directional_padding && _direction < 360 - _directional_padding ) {
+		return 1 - (angle_difference(_direction,270) / 90);
 	}
 	
 	return 0;
 }
 	
-function math_value_wrap(value,min,max) {
+function math_value_wrap(_value,_min,_max) {
 /*
 	Similar to clamp but will wrap the value
 	instead of clamping it
@@ -211,43 +211,43 @@ function math_value_wrap(value,min,max) {
 	
 	if ( max == 0 ) { return 0; }
 	
-	var _mod = ( argument0 - argument1 ) mod ( argument2 - argument1 );
-	if ( _mod < 0 ) return _mod + argument2 else return _mod + argument1;
+	var _mod = ( _value - _min ) mod ( _max - _min );
+	if ( _mod < 0 ) return _mod + _max else return _mod + _min;
 }
 	
-function math_angle_lerp_smooth(current,target,rate,speed) {
+function math_angle_lerp_smooth(_current,_target,_rate,_speed) {
 	/*
-		Rotates the calling instance towards the target direction,
+		Rotates the calling instance towards the target _direction,
 		at a given rate and easing. The larger the easing factor,
 		the more gradually the turn completes.
 	*/
 	
-	return math_value_wrap(argument0 + median(-argument2,argument2,(1 - argument3) * angle_difference(argument1,argument0)),0,360);
+	return math_value_wrap(_current + median(-_rate,_rate,(1 - _speed) * angle_difference(_target,_current)),0,360);
 }
 	
-function math_chance(chance) {
+function math_chance(_chance) {
 	// chance should be a value from 0 to 1
-	return (random(1) < argument0);
+	return (random(1) < _chance);
 }
 
-function math_value_range(value,min,max) {
-	return value >= min && value <= max;
+function math_value_range(value,_min,_max) {
+	return value >= _min && value <= _max;
 }
 
-function math_value_range_trimmed(value,min,max) {
-	return value >= min && value < max;
+function math_value_range_trimmed(value,_min,_max) {
+	return value >= _min && value < _max;
 }
 	
-function math_directional_rounding(direction) {
-	if ( direction <= 45 ) {
+function math_directional_rounding(_direction) {
+	if ( _direction <= 45 ) {
 		return 0;
-	} else if ( direction > 45 && direction < 135 ) {
+	} else if ( _direction > 45 && _direction < 135 ) {
 		return 90;
-	} else if ( direction >= 135 && direction <= 225 ) {
+	} else if ( _direction >= 135 && _direction <= 225 ) {
 		return 180;
-	} else if ( direction > 225 && direction < 315 ) {
+	} else if ( _direction > 225 && _direction < 315 ) {
 		return 270;
-	} else if ( direction >= 315 || direction <= 45 ) {
+	} else if ( _direction >= 315 || _direction <= 45 ) {
 		return 0;
 	}
 	
@@ -290,10 +290,24 @@ function normalize_vector_to_analog(_x,_y) {
 	}
 }
 
-function approach_angle(a, b, turn_rate){
-	var angle_result = a;
-	var angle_diff = angle_difference(b, angle_result);
-	if (abs(angle_diff) <= turn_rate) return b;
+function approach(_source, _dest, _amount) {
+	var _diff = _dest-_source;
+	if (abs(_diff) <= _amount) return _dest;
+	var _result = _source + (sign(_diff)*_amount);
+	return _result;
+}
+
+function approach_angle(_source, _dest, turn_rate){
+	var angle_result = _source;
+	var angle_diff = angle_difference(_dest, angle_result);
+	if (abs(angle_diff) <= turn_rate) return _dest;
 	angle_result += sign(angle_diff) * turn_rate;
 	return angle_result;
+}
+
+function smooth_approach(_source, _dest, _normalized_speed) {
+	var _diff = _dest-_source;
+	if (abs(_diff) <= 0.001) return _dest;
+	var _result = _source + sign(_diff)*abs(_diff)*_normalized_speed;
+	return _result;
 }

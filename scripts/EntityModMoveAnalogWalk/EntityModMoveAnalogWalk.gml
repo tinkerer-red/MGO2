@@ -31,6 +31,12 @@ function EntityModMoveAnalogWalk() : Modifier("EntityModMoveAnalogWalk", MOD_SYN
 			move_vector.x = move_vector.x + owner.input_vector.x;
 			move_vector.y = move_vector.y + owner.input_vector.y;
 			
+			//if not pressing an input then just dont move
+			if (owner.input_vector.x == 0) && (owner.input_vector.y == 0) {
+				move_vector.x = 0;
+				move_vector.y = 0;
+			}
+			
 			var _speed = point_distance(0,0,move_vector.x, move_vector.y);
 			var _dir = point_direction(0,0,move_vector.x, move_vector.y);
 			

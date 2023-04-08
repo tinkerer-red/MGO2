@@ -341,3 +341,23 @@ function string_get_array(_str, prefix, suffix) {
 	return _arr
 }
 
+function string_upper_fast(_str) {
+	// A = 65
+	// Z = 90
+	// a = 97
+	// z = 122
+	var _new_str = _str;
+	var _size = string_length(_new_str);
+	var _byte;
+	var _i=1; repeat(_size) {
+		_byte = string_byte_at(_new_str, _i);
+		if (_byte >= 97 && _byte <= 122) {
+			_byte -= 32
+			_new_str = string_set_byte_at(_new_str, _i, _byte);
+		}
+	_i+=1;}//end repeat loop
+	
+	return _new_str;
+}
+
+

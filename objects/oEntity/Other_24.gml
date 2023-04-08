@@ -6,7 +6,7 @@ state_machine = function() : State() constructor {
 	
 	var _enter_event = function() {
 		//init the modifiers
-		__owner.modifiers.init_modifiers("ENTITY_STATE_"+string_upper(__owner.csm.current_state_id)+"_"+string_upper(fsm.get_current_state()));
+		__owner.modifiers.init_modifiers("ENTITY_STATE_"+string_upper_fast(__owner.csm.current_state_id)+"_"+string_upper_fast(fsm.get_current_state()));
 		
 		postpone_transition = false;
 		
@@ -18,14 +18,14 @@ state_machine = function() : State() constructor {
 		}
 	}
 	var _update_event = function() {
-		var _ready_to_move_on = __owner.modifiers.run_modifiers("ENTITY_STATE_"+string_upper(__owner.csm.current_state_id)+"_"+string_upper(fsm.get_current_state()));
+		var _ready_to_move_on = __owner.modifiers.run_modifiers("ENTITY_STATE_"+string_upper_fast(__owner.csm.current_state_id)+"_"+string_upper_fast(fsm.get_current_state()));
 		
 		if (_ready_to_move_on) {
 			allow_transition = true;
 		}
 	}
 	var _leave_event = function() {
-		__owner.modifiers.clean_up_modifiers("ENTITY_STATE_"+string_upper(__owner.csm.current_state_id)+"_"+string_upper(fsm.get_current_state()));
+		__owner.modifiers.clean_up_modifiers("ENTITY_STATE_"+string_upper_fast(__owner.csm.current_state_id)+"_"+string_upper_fast(fsm.get_current_state()));
 	}
 	
 	self.fsm = new SnowState("deactive");

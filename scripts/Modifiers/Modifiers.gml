@@ -214,11 +214,11 @@ function ModifierHandler() constructor {
 					
 					if (_event_struct.sync_type == MOD_SYNC_TYPE.ASYNC) {
 						queue_async_mod(_mod);
-						_i+=1;
-						continue;
+						_return = true;
 					}
-					
-					_return = run_modifiers_steps(_mod, _event_struct, _step);
+					else {
+						_return = run_modifiers_steps(_mod, _event_struct, _step);
+					}
 					
 					_ready_to_move_on = (is_undefined(_return)) ? false : _return;
 				}
@@ -240,7 +240,7 @@ function ModifierHandler() constructor {
 		var _ready_to_delete = undefined;
 		var _j;
 		
-		
+		log(["_size", _size])
 		var _i=0; repeat(_size) {
 			_key = _names[_i];
 			_mod = async_mod_queue[$ _key];
@@ -255,7 +255,7 @@ function ModifierHandler() constructor {
 				if (_event_struct.sync_type == MOD_SYNC_TYPE.ASYNC) {
 					_ready_to_delete = run_modifiers_steps(_mod, _event_struct);
 					
-					if (!_ready_to_delete) {
+					if (_ready_to_delete) {
 						var _func = method(_mod, _event_struct.clean_up);
 						_func();
 						variable_struct_remove(async_mod_queue, _key);
@@ -432,7 +432,6 @@ function ModifierHandler() constructor {
 				_event_key = _names[_i];
 				_event_struct = _mod.events[$ _event_key];
 				if (_event_struct.sync_type == MOD_SYNC_TYPE.ASYNC) {
-					
 					var _func = method(_mod, _event_struct.init);
 					_func();
 				}
