@@ -18,6 +18,7 @@
     {"name":"InputController","order":1,"path":"folders/Systems/InputController.yy",},
   ],
   "ResourceOrderSettings": [
+    {"name":"EntityModMoveWalkTank","order":5,"path":"scripts/EntityModMoveWalkTank/EntityModMoveWalkTank.yy",},
     {"name":"stick_to_angle","order":2,"path":"scripts/stick_to_angle/stick_to_angle.yy",},
     {"name":"oPlayer","order":1,"path":"objects/oPlayer/oPlayer.yy",},
     {"name":"EntityModMoveTest","order":2,"path":"scripts/EntityModMoveTest/EntityModMoveTest.yy",},
@@ -45,6 +46,7 @@
     {"name":"Note1","order":16,"path":"notes/Note1/Note1.yy",},
     {"name":"scrBuffers","order":13,"path":"scripts/scrBuffers/scrBuffers.yy",},
     {"name":"scrDrawing","order":4,"path":"scripts/scrDrawing/scrDrawing.yy",},
+    {"name":"EntityModMoveWalkRacer","order":6,"path":"scripts/EntityModMoveWalkRacer/EntityModMoveWalkRacer.yy",},
     {"name":"scrInstaqnces","order":5,"path":"scripts/scrInstaqnces/scrInstaqnces.yy",},
     {"name":"scrTime","order":11,"path":"scripts/scrTime/scrTime.yy",},
     {"name":"EntityModMoveTron","order":1,"path":"scripts/EntityModMoveTron/EntityModMoveTron.yy",},

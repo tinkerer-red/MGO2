@@ -6,12 +6,7 @@ input_interacting = false;
 
 modifiers = new ModifierHandler();
 
-modifiers.add_modifier(new EntityModMoveAnalogWalk());
-modifiers.add_modifier(new EntityModMoveMarble());
-//modifiers.add_modifier(new EntityModMoveMarble());
-//modifiers.add_modifier(new EntityModMoveMarble());
-//modifiers.add_modifier(new EntityModMoveMarble());
-//modifiers.add_modifier(new EntityModMoveMarble());
+modifiers.add_modifier(new EntityModMoveWalkRacer());
 
 
 

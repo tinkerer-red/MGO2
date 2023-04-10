@@ -240,7 +240,6 @@ function ModifierHandler() constructor {
 		var _ready_to_delete = undefined;
 		var _j;
 		
-		log(["_size", _size])
 		var _i=0; repeat(_size) {
 			_key = _names[_i];
 			_mod = async_mod_queue[$ _key];

@@ -41,6 +41,7 @@
   },
   "resources": [
     {"id":{"name":"__snowstate_config","path":"scripts/__snowstate_config/__snowstate_config.yy",},},
+    {"id":{"name":"EntityModMoveWalkTank","path":"scripts/EntityModMoveWalkTank/EntityModMoveWalkTank.yy",},},
     {"id":{"name":"stick_to_angle","path":"scripts/stick_to_angle/stick_to_angle.yy",},},
     {"id":{"name":"oPlayer","path":"objects/oPlayer/oPlayer.yy",},},
     {"id":{"name":"EntityModMoveTest","path":"scripts/EntityModMoveTest/EntityModMoveTest.yy",},},
@@ -73,6 +74,7 @@
     {"id":{"name":"EntityModMoveAnalogWalk","path":"scripts/EntityModMoveAnalogWalk/EntityModMoveAnalogWalk.yy",},},
     {"id":{"name":"scrArrays","path":"scripts/scrArrays/scrArrays.yy",},},
     {"id":{"name":"scrDrawing","path":"scripts/scrDrawing/scrDrawing.yy",},},
+    {"id":{"name":"EntityModMoveWalkRacer","path":"scripts/EntityModMoveWalkRacer/EntityModMoveWalkRacer.yy",},},
     {"id":{"name":"scrInstaqnces","path":"scripts/scrInstaqnces/scrInstaqnces.yy",},},
     {"id":{"name":"scrTime","path":"scripts/scrTime/scrTime.yy",},},
     {"id":{"name":"EntityModMoveTron","path":"scripts/EntityModMoveTron/EntityModMoveTron.yy",},},
